@@ -13,7 +13,7 @@
 環境のセットアップを実施後  
 http://byteball.memo.wiki/d/%B3%AB%C8%AF%B4%C4%B6%AD%A4%CE%B9%BD%C3%DB  
 
-npm install 
+npm install  
 で環境設定完了  
   
 ## 使い方
