@@ -197,9 +197,9 @@ function reliablyPostDataFeed(datafeed) {
 					device.sendMessageToDevice(from_address, 'text', "Unrecognized");
 					
 				var date1 = new Date();
-                		date1.setMinutes(date1.getMinutes() + 60);
+                		date1.setMinutes(date1.getMinutes() + 10);
                 		var date2 = new Date();
-                		date2.setMinutes(date2.getMinutes() + 10);
+                		date2.setMinutes(date2.getMinutes() + 60);
 
 				var address = arrMatches[0];
 				if (!ValidationUtils.isValidAddress(address)){
