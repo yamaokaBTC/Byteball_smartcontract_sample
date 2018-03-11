@@ -170,24 +170,6 @@ function reliablyPostDataFeed(datafeed) {
 }
 
 
-function readExistingData(feed_name, handleResult) {
-	if (assocQueuedDataFeeds[feed_name]) {
-		return handleResult(true, 0, assocQueuedDataFeeds[feed_name]);
-	}
-	db.query(
-		"SELECT feed_name, is_stable, value \n\
-		FROM data_feeds CROSS JOIN unit_authors USING(unit) CROSS JOIN units USING(unit) \n\
-		WHERE address=? AND feed_name=?", [my_address, feed_name],
-		function(rows) {
-			if (rows.length === 0)
-				return handleResult(false);
-			if (rows.length > 1)
-				notifications.notifyAdmin(rows.length + ' entries for feed', feed_name);
-			return handleResult(true, rows[0].is_stable, rows[0].value);
-		}
-	);
-}
-
 //*********************************
 //データ読み書き実装部
 //*********************************
@@ -213,7 +195,12 @@ function readExistingData(feed_name, handleResult) {
 				var arrMatches = text.match(/\b[A-Z2-7]{32}\b/);
 				if (!arrMatches)
 					device.sendMessageToDevice(from_address, 'text', "Unrecognized");
-				
+					
+				var date1 = new Date();
+                		date1.setMinutes(date1.getMinutes() + 60);
+                		var date2 = new Date();
+                		date2.setMinutes(date2.getMinutes() + 10);
+
 				var address = arrMatches[0];
 				if (!ValidationUtils.isValidAddress(address)){
 					device.sendMessageToDevice(from_address, 'text', "Please send a valid address.有効なアドレスを入力してください");
@@ -222,13 +209,13 @@ function readExistingData(feed_name, handleResult) {
 					var arrDefinition = ['or', [
 							['and', [
 											['address',address],//useraddress
-											['in data feed', [['I2ADHGP4HL6J37NQAD73J7E5SKFIXJOT'], 'timestamp', '>',  Date.now()]]
+											['in data feed', [['I2ADHGP4HL6J37NQAD73J7E5SKFIXJOT'], 'timestamp', '>',  date1.getTime()]]
 											//I2ADHGP4HL6J37NQAD73J7E5SKFIXJOTはタイムスタンプオラクルのアドレスです。
 									]
 							],
 							['and', [
 											['address', my_address],//myaddress
-											['in data feed', [['I2ADHGP4HL6J37NQAD73J7E5SKFIXJOT'], 'timestamp', '>',  Date.now()]]
+											['in data feed', [['I2ADHGP4HL6J37NQAD73J7E5SKFIXJOT'], 'timestamp', '>',  date2.getTime()]]
 									]
 							]
 					]];
